@@ -6,19 +6,28 @@ function TreePlantingGame() {
     const savedScore = localStorage.getItem('quizScore');
     return savedScore ? parseInt(savedScore, 0) : 10;
   });
-  
-  const [trees, setTrees] = useState([]);
+
+  const [trees, setTrees] = useState(() => {
+    const savedTrees = localStorage.getItem('trees');
+    return savedTrees ? JSON.parse(savedTrees) : [];
+  });
+
   const [isPlantingMode, setIsPlantingMode] = useState(false);
+  const [isRemovingMode, setIsRemovingMode] = useState(false);
 
   useEffect(() => {
-    // 점수 상태가 변경될 때마다 localStorage에 업데이트
     localStorage.setItem('quizScore', score);
-  }, [score]);
+    localStorage.setItem('trees', JSON.stringify(trees));
+  }, [score, trees]);
 
   const handlePlantMode = () => {
-    if (score >= 1) {
-      setIsPlantingMode(true);
-    }
+    setIsRemovingMode(false);
+    setIsPlantingMode(!isPlantingMode);
+  };
+
+  const handleRemoveMode = () => {
+    setIsPlantingMode(false);
+    setIsRemovingMode(!isRemovingMode);
   };
 
   const plantTree = (e) => {
@@ -31,19 +40,36 @@ function TreePlantingGame() {
       setScore(prevScore => prevScore - 1);
       setIsPlantingMode(false);
     }
+
+    if (isRemovingMode) {
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Find the tree near the click position (within a threshold)
+      const threshold = 20; // Adjust this as needed
+      const treeToRemove = trees.find(tree => Math.abs(tree.x - x) < threshold && Math.abs(tree.y - y) < threshold);
+
+      if (treeToRemove) {
+        setTrees(prevTrees => prevTrees.filter(tree => tree !== treeToRemove));
+        setScore(prevScore => prevScore + 1);
+        setIsRemovingMode(false);
+      }
+    }
   };
 
   return (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center', // 가로 중앙 정렬
-      justifyContent: 'center', // 세로 중앙 정렬
-      height: '100vh' // 높이를 뷰포트의 100%로 설정
-  }}>
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh'
+    }}>
       <h1>Planting Tree Game</h1>
       <p>Seeds: {score}</p>
       <button onClick={handlePlantMode}>Plant a tree (Cost: 1)</button>
+      <button onClick={handleRemoveMode}>Remove a tree (Get back: 1)</button>
       <div className="forest" onClick={plantTree}>
         {trees.map((tree, index) => (
           <div key={index} className={`tree age-${tree.age}`} style={{ left: `${tree.x}px`, top: `${tree.y}px` }} ></div>

@@ -30,7 +30,7 @@ function QuizPage() {
   const checkAnswer = (event) => {
     event.preventDefault();
     if (questionData && userAnswer.toLowerCase() === questionData.correct_answer.toLowerCase()) {
-      setScore(prevScore => prevScore + 1);
+      setScore(prevScore => prevScore + 5);
       alert('Correct!');
     } else {
       alert(`Incorrect. The correct answer is: ${questionData.correct_answer}`);
