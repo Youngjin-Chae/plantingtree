@@ -52,7 +52,6 @@ function TreePlantingGame() {
 
       if (treeToRemove) {
         setTrees(prevTrees => prevTrees.filter(tree => tree !== treeToRemove));
-        setScore(prevScore => prevScore + 1);
         setIsRemovingMode(false);
       }
     }
@@ -69,7 +68,7 @@ function TreePlantingGame() {
       <h1>Planting Tree Game</h1>
       <p>Seeds: {score}</p>
       <button onClick={handlePlantMode}>Plant a tree (Cost: 1)</button>
-      <button onClick={handleRemoveMode}>Remove a tree (Get back: 1)</button>
+      <button onClick={handleRemoveMode}>Remove a tree</button>
       <div className="forest" onClick={plantTree}>
         {trees.map((tree, index) => (
           <div key={index} className={`tree age-${tree.age}`} style={{ left: `${tree.x}px`, top: `${tree.y}px` }} ></div>
