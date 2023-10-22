@@ -1,11 +1,21 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import '../styles/style.css';
 
 function Home() {
+  const router = useRouter();
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    // Redirect to the menu page.
+    router.push('/menu');
+  };
+
   return (
     <div className="login-container">
       <h2>Login</h2>
-      <form id="login-form" action="/menu" method="post">
+      <form id="login-form" onSubmit={handleLogin} action="/menu" method="post">
         {/* form의 action을 /menu로 변경하여 메뉴 페이지로 리다이렉트 */}
         <label htmlFor="username">Username:</label>
         <input type="text" name="username" id="username" required />

@@ -1,24 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
-function TreePlantingGame() {
-  const [score, setScore] = useState(() => {
-    const savedScore = localStorage.getItem('quizScore');
-    return savedScore ? parseInt(savedScore, 0) : 10;
-  });
-
-  const [trees, setTrees] = useState(() => {
-    const savedTrees = localStorage.getItem('trees');
-    return savedTrees ? JSON.parse(savedTrees) : [];
-  });
-
+function TreePlantingGame({ score, trees }) {
   const [isPlantingMode, setIsPlantingMode] = useState(false);
   const [isRemovingMode, setIsRemovingMode] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('quizScore', score);
-    localStorage.setItem('trees', JSON.stringify(trees));
-  }, [score, trees]);
 
   const handlePlantMode = () => {
     setIsRemovingMode(false);
